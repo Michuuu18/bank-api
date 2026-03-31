@@ -22,4 +22,8 @@ public class AccountService {
     public Account createAccount(Account account) {
         return accountRepository.save(account);
     }
+    public Account getAccountById(Long id) {
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono konta o ID: " + id));
+    }
 }

@@ -25,4 +25,9 @@ public class AccountController {
     public Account addAccount(@RequestBody Account account) {
         return accountService.createAccount(account);
     }
+
+    @GetMapping("/{id}")
+    public Account getAccountById(@PathVariable Long id) {
+        return accountService.getAccountById(id);
+    }
 }
