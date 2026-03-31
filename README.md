@@ -4,8 +4,10 @@ Projekt demonstracyjny aplikacji backendowej dla systemu bankowego, zbudowany w 
 
 ## 🚀 Technologie
 * **Java 17**
-* **Spring Boot 3** (Web, Data JPA)
-* **H2 Database** (in-memory, do celów deweloperskich)
+* **Spring Boot 3** (Web, Data JPA, Validation)
+* **PostgreSQL** (główna baza danych)
+* **Flyway** (wersjonowanie schematu bazy)
+* **H2 Database** (testy)
 * **Lombok** (redukcja kodu boilerplate)
 * **Maven** (zarządzanie zależnościami)
 
@@ -15,10 +17,13 @@ Aplikacja jest gotowa do uruchomienia typu "plug & play".
 2. Uruchom klasę `BankApiApplication` w swoim IDE.
 3. Serwer wystartuje na porcie `8081`.
 
-Konsola bazy danych H2 znajduje się pod adresem: `http://localhost:8081/h2-console`
-* **JDBC URL:** `jdbc:h2:mem:bank_db`
-* **User:** `sa`
-* **Password:** *(puste)*
+Domyślny profil to `local` (H2 in-memory), więc aplikacja uruchamia się bez zewnętrznej bazy.
+
+Aby uruchomić profil PostgreSQL + Flyway:
+- PowerShell: `$env:SPRING_PROFILES_ACTIVE="dev"; ./mvnw.cmd spring-boot:run`
+- opcjonalnie ustaw zmienne: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
+
+Migracje Flyway są wykonywane automatycznie w profilu `dev` z katalogu `src/main/resources/db/migration`.
 
 ## 📬 Dostępne Endpointy (Faza 1 - MVP)
 **Użytkownicy (`/api/users`)**

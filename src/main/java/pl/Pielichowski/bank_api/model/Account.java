@@ -3,6 +3,7 @@ package pl.Pielichowski.bank_api.model;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,15 +25,18 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String accountNumber; 
+    @Column(nullable = false, unique = true)
+    private String accountNumber;
     
     // WAŻNE: W bankowości do pieniędzy ZAWSZE używamy BigDecimal, nigdy double!
-    private BigDecimal balance;   
+    @Column(nullable = false)
+    private BigDecimal balance;
     
+    @Column(nullable = false)
     private String currency; // np. "PLN", "EUR"
 
     // Relacja bazy danych: Wiele kont może należeć do jednego użytkownika
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

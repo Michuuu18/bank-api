@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "transactions")
 @Getter
 @Setter
 public class Transaction {
@@ -15,9 +16,18 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long sourceAccountId; // ID konta nadawcy
+
+    @Column(nullable = false)
     private Long targetAccountId; // ID konta odbiorcy
-    private BigDecimal amount;     // Kwota
-    private String title;          // Tytuł przelewu
+
+    @Column(nullable = false)
+    private BigDecimal amount; // Kwota
+
+    @Column(nullable = false)
+    private String title; // Tytul przelewu
+
+    @Column(nullable = false)
     private LocalDateTime timestamp; // Data i godzina
 }
