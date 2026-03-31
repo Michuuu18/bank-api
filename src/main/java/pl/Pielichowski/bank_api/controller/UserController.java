@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import pl.Pielichowski.bank_api.model.User;
 import pl.Pielichowski.bank_api.service.UserService;
 
@@ -33,11 +34,9 @@ public class UserController {
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
-    // Endpoint do tworzenia nowego klienta. 
-    // Dostępny pod adresem: POST http://localhost:8080/api/users
+    // Endpoint do tworzenia nowego klienta z walidacją danych
     @PostMapping
-    public User addUser(@RequestBody User user) {
-        // @RequestBody bierze JSONa wysłanego w zapytaniu i zamienia go na obiekt Java (User)
+    public User addUser(@Valid @RequestBody User user) {
         return userService.createUser(user);
     }
 }
