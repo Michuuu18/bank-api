@@ -1,13 +1,13 @@
 @echo off
 setlocal
-
-echo Checking port 8081...
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":8081" ^| findstr LISTENING') do (
-  echo Stopping process %%a using port 8081...
-  taskkill /PID %%a /T /F >nul 2>&1
+echo Zwalnianie portu 8081 (jesli zajety przez stara instancje aplikacji)...
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$pids = @(Get-NetTCPConnection -LocalPort 8081 -ErrorAction SilentlyContinue ^| Where-Object { $_.State -eq 'Listen' } ^| Select-Object -ExpandProperty OwningProcess -Unique ^| Where-Object { $_ -gt 0 }); ^
+   foreach ($id in $pids) { Write-Host ('  Zatrzymuje PID ' + $id); Stop-Process -Id $id -Force -ErrorAction SilentlyContinue }"
+if errorlevel 1 (
+  echo Uwaga: nie udalo sie uzyc PowerShell do zwolnienia portu. Sprobuj recznie: netstat -ano ^| findstr :8081
 )
-
-echo Starting Bank API on port 8081...
-call mvnw.cmd spring-boot:run
-
+echo.
+echo Uruchamianie Bank API (domyslnie port 8081, lub zmienna SERVER_PORT)...
+call mvnw.cmd spring-boot:run %*
 endlocal
