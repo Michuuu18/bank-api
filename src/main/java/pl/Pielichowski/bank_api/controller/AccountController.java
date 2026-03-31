@@ -30,4 +30,17 @@ public class AccountController {
     public Account getAccountById(@PathVariable Long id) {
         return accountService.getAccountById(id);
     }
+
+    @PostMapping("/transfer")
+    public String transfer(
+            @RequestParam Long fromId, 
+            @RequestParam Long toId, 
+            @RequestParam java.math.BigDecimal amount, 
+            @RequestParam String title) {
+        
+        accountService.transferMoney(fromId, toId, amount, title);
+        return "Przelew wykonany pomyslnie!";
+    }
+
+    
 }
