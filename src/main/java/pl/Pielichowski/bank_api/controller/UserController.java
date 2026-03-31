@@ -1,7 +1,5 @@
 package pl.Pielichowski.bank_api.controller;
 
-import java.util.List;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 import pl.Pielichowski.bank_api.model.User;
 import pl.Pielichowski.bank_api.service.UserService;
 
@@ -23,20 +20,28 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Endpoint do pobierania listy klientów. 
-    // Dostępny pod adresem: GET http://localhost:8080/api/users
+   // Endpoint do pobierania bezpiecznej listy klientów (bez haseł)
     @GetMapping
-    public List<User> getUsers() {
-        return userService.getAllUsers();
+    public java.util.List<pl.Pielichowski.bank_api.dto.UserDTO> getUsers() {
+        return userService.getAllUsers().stream().map(user -> {
+            pl.Pielichowski.bank_api.dto.UserDTO dto = new pl.Pielichowski.bank_api.dto.UserDTO();
+            dto.setId(user.getId());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setEmail(user.getEmail());
+            return dto;
+        }).collect(java.util.stream.Collectors.toList());
     }
-// Ścieżka będzie wyglądać tak: GET http://localhost:8081/api/users/1
+
+    // Ścieżka do pobierania pojedynczego użytkownika
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
-    // Endpoint do tworzenia nowego klienta z walidacją danych
+
+    // Endpoint do tworzenia nowego klienta z walidacją
     @PostMapping
-    public User addUser(@Valid @RequestBody User user) {
+    public User addUser(@jakarta.validation.Valid @RequestBody User user) {
         return userService.createUser(user);
     }
 }
