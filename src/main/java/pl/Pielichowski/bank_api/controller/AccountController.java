@@ -1,5 +1,7 @@
 package pl.Pielichowski.bank_api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.*;
 import pl.Pielichowski.bank_api.model.Account;
 import pl.Pielichowski.bank_api.service.AccountService;
@@ -8,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
+@Tag(name = "Accounts", description = "Rachunki i przelewy")
 public class AccountController {
 
     private final AccountService accountService;

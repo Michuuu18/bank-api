@@ -1,5 +1,8 @@
 package pl.Pielichowski.bank_api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +15,7 @@ import pl.Pielichowski.bank_api.service.UserService;
 
 @RestController // Mówi Springowi: "To jest API, zwracaj wyniki w formacie JSON"
 @RequestMapping("/api/users") // Każdy adres w tym pliku będzie zaczynał się od tego przedrostka
+@Tag(name = "Users", description = "Rejestracja i odczyt klientów")
 public class UserController {
 
     private final UserService userService;
@@ -20,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-   // Endpoint do pobierania bezpiecznej listy klientów (bez haseł)
+    @Operation(summary = "Lista użytkowników", description = "Zwraca użytkowników bez pól wrażliwych (hasło pomijane)")
     @GetMapping
     public java.util.List<pl.Pielichowski.bank_api.dto.UserDTO> getUsers() {
         return userService.getAllUsers().stream().map(user -> {
@@ -33,13 +37,13 @@ public class UserController {
         }).collect(java.util.stream.Collectors.toList());
     }
 
-    // Ścieżka do pobierania pojedynczego użytkownika
+    @Operation(summary = "Użytkownik po ID")
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
-    // Endpoint do tworzenia nowego klienta z walidacją
+    @Operation(summary = "Rejestracja użytkownika", description = "Hasło w żądaniu jawne; w odpowiedzi jest omitowane i w bazie przechowywane jako hash BCrypt")
     @PostMapping
     public User addUser(@jakarta.validation.Valid @RequestBody User user) {
         return userService.createUser(user);
